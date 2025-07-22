@@ -16,13 +16,10 @@ public:
             return nullptr;
         } else if (root->val == val) {
             return root;
+        } else if (root->val > val) {
+            return searchBST(root->left, val);
         } else {
-            TreeNode* testLeft = searchBST(root->left, val);
-            if (testLeft != nullptr) {
-                return testLeft;
-            } else {
-                return searchBST(root->right, val);
-            }
+            return searchBST(root->right, val);
         }
     }
 };
