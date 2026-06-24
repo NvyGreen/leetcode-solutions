@@ -10,12 +10,11 @@ class Solution:
     
 
     def helper(self, root: Optional[TreeNode], minVal, maxVal) -> bool:
-        if root is None:
+        if not root:
             return True
         
         if root.val <= minVal or root.val >= maxVal:
             return False
         
         return self.helper(root.left, minVal, root.val) and self.helper(root.right, root.val, maxVal)
-        
         
