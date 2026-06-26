@@ -1,61 +1,54 @@
 class Solution:
-    def medianSlidingWindow(self, nums, k):
-        res = []
-
-        # store first half [0 ... n/2]
-        maxset = SortedList(key=lambda x: (-x[0], -x[1]))
-
-        # store second half [n/2 .... n]
-        minset = SortedList(key=lambda x: (x[0], x[1]))
-
+    def medianSlidingWindow(self, nums: List[int], k: int) -> List[float]:
+        max_heap = []
+        min_heap = []
+        heap_dict = defaultdict(int)
+        result = []
+        
         for i in range(k):
-            minset.add((nums[i], i))
+            heappush(max_heap, -nums[i])
+            heappush(min_heap, -heappop(max_heap))
+            if len(min_heap) > len(max_heap):
+                heappush(max_heap, -heappop(min_heap))
+        
+        median = self.find_median(max_heap, min_heap, k)
+        result.append(median)
+        
+        for i in range(k, len(nums)):
+            prev_num = nums[i - k]
+            heap_dict[prev_num] += 1
 
-        for _ in range(k // 2):
-            it = minset[0]
-            maxset.add(it)
-            minset.remove(it)
+            balance = -1 if prev_num <= median else 1
+            
+            if nums[i] <= median:
+                balance += 1
+                heappush(max_heap, -nums[i])
+            else:
+                balance -= 1
+                heappush(min_heap, nums[i])
+            
+            if balance < 0:
+                heappush(max_heap, -heappop(min_heap))
+            elif balance > 0:
+                heappush(min_heap, -heappop(max_heap))
 
-        if k % 2:
-            median = minset[0][0]
+            while max_heap and heap_dict[-max_heap[0]] > 0:
+                heap_dict[-max_heap[0]] -= 1
+                heappop(max_heap)
+            
+            while min_heap and heap_dict[min_heap[0]] > 0:
+                heap_dict[min_heap[0]] -= 1
+                heappop(min_heap)
+
+            median = self.find_median(max_heap, min_heap, k)
+            result.append(median)
+        
+        return result
+    
+
+    def find_median(self, max_heap, min_heap, heap_size):
+        if heap_size % 2 == 1:
+            return -max_heap[0]
         else:
-            median = (1.0 * maxset[0][0] + 1.0 * minset[0][0]) / 2.0
-
-        res.append(median)
-
-        r, l = k, 0
-
-        while r < len(nums):
-
-            add = (nums[r], r)
-            remove = (nums[l], l)
-            f = 1
-
-            if remove in maxset:
-                maxset.remove(remove)
-                f -= 1
-            else:
-                minset.remove(remove)
-
-            if f:
-                maxset.add(add)
-                it = maxset[0]
-                minset.add(it)
-                maxset.remove(it)
-            else:
-                minset.add(add)
-                it = minset[0]
-                maxset.add(it)
-                minset.remove(it)
-
-            if k % 2:
-                median = minset[0][0]
-            else:
-                median = (1.0 * maxset[0][0] + 1.0 * minset[0][0]) / 2.0
-
-            res.append(median)
-
-            r += 1
-            l += 1
-
-        return res
+            return (-max_heap[0] + min_heap[0]) / 2
+        
