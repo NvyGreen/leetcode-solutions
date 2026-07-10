@@ -12,42 +12,41 @@ class LRUCache:
 
     def get(self, key: int) -> int:
         node = self.cache.get(key)
-        if node is not None:
-            self._remove(node)
-            self._add_front(node)
-            return node.value
-        return -1
+        if node is None:
+            return -1
+        
+        self._remove(node)
+        self._add_front(node)
+        return node.value
         
 
     def put(self, key: int, value: int) -> None:
         node = self.cache.get(key)
-        if node is not None:
-            self._remove(node)
-        else:
-            node = Node(key=key)
+        if node is None:
+            node = Node(key, value)
             self.cache[key] = node
-        
-        node.value = value
-        self._add_front(node)
+            self._add_front(node)
 
-        if len(self.cache) > self.capacity:
-            lruNode = self.tail.prev
-            del self.cache[lruNode.key]
-            self._remove(lruNode)
+            if len(self.cache) > self.capacity:
+                lruNode = self.tail.prev
+                del self.cache[lruNode.key]
+                self._remove(lruNode)
+        else:
+            node.value = value
+            self._remove(node)
+            self._add_front(node)
     
 
     def _remove(self, node):
-        old_prev = node.prev
-        old_next = node.next
-        old_prev.next = old_next
-        old_next.prev = old_prev
+        node.prev.next = node.next
+        node.next.prev = node.prev
     
 
     def _add_front(self, node):
-        node.prev = self.head
-        node.next = self.head.next
         self.head.next.prev = node
+        node.next = self.head.next
         self.head.next = node
+        node.prev = self.head
 
 
 class Node:
@@ -56,7 +55,6 @@ class Node:
         self.value = value
         self.prev = None
         self.next = None
-
 
 # Your LRUCache object will be instantiated and called as such:
 # obj = LRUCache(capacity)
