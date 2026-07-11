@@ -5,9 +5,8 @@ class Solution:
 
         while start <= end:
             mid = (start + end) // 2
-            total = self.sumPilesDividedByK(piles, mid)
-
-            if total <= h:
+            result = self.sumPilesDividedByK(piles, mid)
+            if result <= h:
                 end = mid - 1
             else:
                 start = mid + 1
@@ -19,6 +18,5 @@ class Solution:
         total = 0
         for pile in piles:
             total += math.ceil(pile / k)
-        
         return total
         
