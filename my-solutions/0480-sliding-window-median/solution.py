@@ -1,54 +1,90 @@
 class Solution:
     def medianSlidingWindow(self, nums: List[int], k: int) -> List[float]:
-        max_heap = []
-        min_heap = []
-        heap_dict = defaultdict(int)
-        result = []
-        
-        for i in range(k):
-            heappush(max_heap, -nums[i])
-            heappush(min_heap, -heappop(max_heap))
-            if len(min_heap) > len(max_heap):
-                heappush(max_heap, -heappop(min_heap))
-        
-        median = self.find_median(max_heap, min_heap, k)
-        result.append(median)
-        
-        for i in range(k, len(nums)):
-            prev_num = nums[i - k]
-            heap_dict[prev_num] += 1
+        meds = []
+        self.lowHeap = []
+        self.highHeap = []
+        start, end = 0, 1
+        self.toDelete = {}
+        heapq.heappush(self.lowHeap, -nums[start])
+        self.lowSize, self.highSize = 1, 0
 
-            balance = -1 if prev_num <= median else 1
-            
-            if nums[i] <= median:
-                balance += 1
-                heappush(max_heap, -nums[i])
-            else:
-                balance -= 1
-                heappush(min_heap, nums[i])
-            
-            if balance < 0:
-                heappush(max_heap, -heappop(min_heap))
-            elif balance > 0:
-                heappush(min_heap, -heappop(max_heap))
+        while end < k:
+            self.addNum(nums[end])
+            self.balance()
+            end += 1
+        meds.append(self.getMedian())
 
-            while max_heap and heap_dict[-max_heap[0]] > 0:
-                heap_dict[-max_heap[0]] -= 1
-                heappop(max_heap)
-            
-            while min_heap and heap_dict[min_heap[0]] > 0:
-                heap_dict[min_heap[0]] -= 1
-                heappop(min_heap)
+        while end < len(nums):
+            self.markDelete(nums[start])
+            start += 1
+            self.balance()
+            self.addNum(nums[end])
+            end += 1
+            self.balance()
+            meds.append(self.getMedian())
 
-            median = self.find_median(max_heap, min_heap, k)
-            result.append(median)
-        
-        return result
+        return meds
     
 
-    def find_median(self, max_heap, min_heap, heap_size):
-        if heap_size % 2 == 1:
-            return -max_heap[0]
+    def addNum(self, num: int) -> None:
+        if self.lowSize == 0:
+            heapq.heappush(self.lowHeap, -num)
+            self.lowSize += 1
+        elif num > -self.lowHeap[0]:
+            if self.highSize > 0 and num < self.highHeap[0]:
+                heapq.heappush(self.lowHeap, -num)
+                self.lowSize += 1
+            else:
+                heapq.heappush(self.highHeap, num)
+                self.highSize += 1
         else:
-            return (-max_heap[0] + min_heap[0]) / 2
+            heapq.heappush(self.lowHeap, -num)
+            self.lowSize += 1
+    
+
+    def markDelete(self, num: int):
+        self.toDelete[num] = self.toDelete.get(num, 0) + 1
+        if num <= -self.lowHeap[0]:
+            self.lowSize -= 1
+        else:
+            self.highSize -= 1
+    
+
+    def balance(self) -> None:
+        self.prune()
         
+        while len(self.highHeap) > 0 and self.highSize > self.lowSize:
+            temp = heapq.heappop(self.highHeap)
+            if not self.toDelete.get(temp):
+                self.highSize -= 1
+                heapq.heappush(self.lowHeap, -temp)
+                self.lowSize += 1
+            else:
+                self.toDelete[temp] -= 1
+        
+        while len(self.lowHeap) > 0 and self.lowSize > self.highSize + 1:
+            temp = -heapq.heappop(self.lowHeap)
+            if not self.toDelete.get(temp):
+                self.lowSize -= 1
+                heapq.heappush(self.highHeap, temp)
+                self.highSize += 1
+            else:
+                self.toDelete[temp] -= 1
+    
+
+    def prune(self) -> None:
+        while len(self.lowHeap) > 0 and self.toDelete.get(-self.lowHeap[0], 0) > 0:
+            val = heapq.heappop(self.lowHeap)
+            self.toDelete[-val] -= 1
+        
+        while len(self.highHeap) > 0 and self.toDelete.get(self.highHeap[0], 0) > 0:
+            val = heapq.heappop(self.highHeap)
+            self.toDelete[val] -= 1
+    
+
+    def getMedian(self) -> float:
+        self.prune()
+        if self.lowSize > self.highSize:
+            return -self.lowHeap[0]
+        
+        return (-self.lowHeap[0] + self.highHeap[0]) / 2
