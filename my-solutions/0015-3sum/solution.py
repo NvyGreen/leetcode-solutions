@@ -1,29 +1,33 @@
 class Solution:
     def threeSum(self, nums: list[int]) -> list[list[int]]:
-        result = set()
+        res = []
         nums.sort()
+        for i in range(len(nums)):
+            if nums[i] > 0:
+                break
+            
+            if i == 0 or nums[i - 1] != nums[i]:
+                self.twoSum(nums, i, res)
+            
+        return res
 
-        for i in range(len(nums) - 2):
-            if i > 0 and nums[i] == nums[i - 1]:
-                continue
 
-            start = i + 1
-            end = len(nums) - 1
+    def twoSum(self, nums: list[int], i: int, res: list[list[int]]) -> None:
+        start = i + 1
+        end = len(nums) - 1
+        while start < end:
+            total = nums[i] + nums[start] + nums[end]
+            if total == 0:
+                res.append([nums[i], nums[start], nums[end]])
 
-            while start < end:
-                try_sum = nums[i] + nums[start] + nums[end]
-                if try_sum == 0:
-                    result.add((nums[i], nums[start], nums[end]))
-                    while start < end and nums[start] == nums[start] + 1:
-                        start += 1
-                    while start < end and nums[end] == nums[end] - 1:
-                        end -= 1
-                    
+                start += 1
+                while start < end and nums[start - 1] == nums[start]:
                     start += 1
+                
+                end -= 1
+                while start < end and nums[end + 1] == nums[end]:
                     end -= 1
-                elif try_sum < 0:
-                    start += 1
-                else:
-                    end -= 1
-
-        return list(result)
+            elif total > 0:
+                end -= 1
+            else:
+                start += 1
