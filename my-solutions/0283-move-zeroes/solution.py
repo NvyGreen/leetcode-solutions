@@ -1,18 +1,11 @@
-class Solution(object):
-    def moveZeroes(self, nums):
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
         """
-        :type nums: List[int]
-        :rtype: None Do not return anything, modify nums in-place instead.
+        Do not return anything, modify nums in-place instead.
         """
-        zero_count = 0
-        i = 0
-        while i < len(nums):
-            if nums[i] == 0:
-                zero_count += 1
-                nums.pop(i)
-                i -= 1
-            i += 1
-        
-        for j in range(zero_count):
-            nums.append(0)
+        slotPointer = 0        
+        for pointer in range(len(nums)):
+            if nums[pointer] != 0:
+                nums[pointer], nums[slotPointer] = nums[slotPointer], nums[pointer]
+                slotPointer += 1
         
