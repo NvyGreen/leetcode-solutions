@@ -4,13 +4,11 @@ class Solution:
         end = len(numbers) - 1
 
         while start < end:
-            try_sum = numbers[start] + numbers[end]
-            if try_sum < target:
-                start += 1
-            elif try_sum > target:
-                end -= 1
-            else:
+            if numbers[start] + numbers[end] == target:
                 return [start + 1, end + 1]
+            elif numbers[start] + numbers[end] < target:
+                start += 1
+            else:
+                end -= 1
         
-        return []
-        
+        return [-1, -1]
