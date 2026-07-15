@@ -5,9 +5,10 @@ class Solution:
 
         while start <= end:
             mid = (start + end) // 2
-            total_days = self.calculateDaysToShip(weights, mid)
+            
+            numDays = self.calcDays(weights, mid)
 
-            if total_days <= days:
+            if numDays <= days:
                 end = mid - 1
             else:
                 start = mid + 1
@@ -15,15 +16,15 @@ class Solution:
         return start
     
 
-    def calculateDaysToShip(self, weights: List[int], capacity: int) -> int:
-        days = 1
+    def calcDays(self, weights: List[int], capacity: int) -> int:
         total = 0
+        numDays = 1
 
         for weight in weights:
+            if total + weight > capacity:
+                numDays += 1
+                total = 0
+            
             total += weight
-            if total > capacity:
-                days += 1
-                total = weight
         
-        return days
-        
+        return numDays
