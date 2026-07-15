@@ -5,8 +5,9 @@ class Solution:
 
         while start <= end:
             mid = (start + end) // 2
-            result = self.sumPilesDividedByK(piles, mid)
-            if result <= h:
+            hours = self.getTotalHours(piles, mid)
+
+            if hours <= h:
                 end = mid - 1
             else:
                 start = mid + 1
@@ -14,9 +15,8 @@ class Solution:
         return start
     
 
-    def sumPilesDividedByK(self, piles: List[int], k: int) -> int:
+    def getTotalHours(self, piles: List[int], k: int) -> int:
         total = 0
         for pile in piles:
             total += math.ceil(pile / k)
         return total
-        
