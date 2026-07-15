@@ -5,9 +5,7 @@ class Solution:
 
         while start <= end:
             mid = (start + end) // 2
-            splits = self.calcNumSplits(nums, mid)
-
-            if splits <= k:
+            if self.checkNoExceed(nums, mid, k):
                 end = mid - 1
             else:
                 start = mid + 1
@@ -15,14 +13,13 @@ class Solution:
         return start
     
 
-    def calcNumSplits(self, nums: List[int], total: int) -> int:
-        splits = 1
-        run_sum = 0
-
+    def checkNoExceed(self, nums: List[int], maxVal: int, k: int) -> bool:
+        total = 0
+        chunks = 1
         for num in nums:
-            run_sum += num
-            if run_sum > total:
-                splits += 1
-                run_sum = num
+            if total + num > maxVal:
+                chunks += 1
+                total = 0
+            total += num
         
-        return splits
+        return chunks <= k
