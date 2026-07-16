@@ -3,23 +3,13 @@ class Solution:
         stk = []
 
         for c in s:
-            if c == ')':
-                if len(stk) > 0 and stk[-1] == '(':
-                    stk.pop()
-                else:
-                    return False
-            elif c == ']':
-                if len(stk) > 0 and stk[-1] == '[':
-                    stk.pop()
-                else:
-                    return False
-            elif c == '}':
-                if len(stk) > 0 and stk[-1] == '{':
-                    stk.pop()
-                else:
-                    return False
-            else:
+            if c in ("(", "[", "{"):
                 stk.append(c)
+            elif len(stk) == 0:
+                return False
+            elif (c == ")" and stk[-1] == "(") or (c == "]" and stk[-1] == "[") or (c == "}" and stk[-1] == "{"):
+                stk.pop()
+            else:
+                return False
         
         return len(stk) == 0
-        
