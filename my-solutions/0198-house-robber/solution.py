@@ -1,16 +1,19 @@
-class Solution(object):
-    def rob(self, nums):
-        """
-        :type nums: List[int]
-        :rtype: int
-        """
-        i = len(nums) - 1
-        opt = [0] * (len(nums) + 2)
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        loot = [-1] * len(nums)
+        maxLoot = 0
+        secMaxLoot = -1
 
-        while i >= 0:
-            rob = nums[i] + opt[i+2]
-            skip = opt[i+1]
-            opt[i] = max(rob, skip)
-            i -= 1
+        for i in range(len(nums) - 1, -1, -1):
+            if maxLoot == 0 or loot[i + 1] != maxLoot:
+                loot[i] = nums[i] + maxLoot
+            else:
+                loot[i] = nums[i] + secMaxLoot
+            
+            if loot[i] >= maxLoot:
+                secMaxLoot = maxLoot
+                maxLoot = loot[i]
+            elif loot[i] >= secMaxLoot:
+                secMaxLoot = loot[i]
         
-        return max(opt)
+        return maxLoot
