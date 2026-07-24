@@ -1,19 +1,13 @@
-class Solution(object):
-    def climbStairs(self, n):
-        """
-        :type n: int
-        :rtype: int
-        """
-        cache = {0:1, 1:1}
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        steps = [0] * (n + 1)
+        steps[0] = 1
 
-        def f(n):
-            if n in cache: return cache[n]
-            if n <= 1:
-                return 1
-            else:
-                cache[n] = f(n-1) + f(n-2)
-                return cache[n]
+        for i in range(len(steps)):
+            if i + 1 < len(steps):
+                steps[i + 1] = steps[i + 1] + steps[i]
             
-        return f(n)
+            if i + 2 < len(steps):
+                steps[i + 2] = steps[i + 2] + steps[i]
         
-
+        return steps[-1]
