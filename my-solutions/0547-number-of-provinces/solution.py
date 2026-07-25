@@ -1,23 +1,22 @@
 class Solution:
     def findCircleNum(self, isConnected: List[List[int]]) -> int:
-        needClear = [True] * len(isConnected)
         provinces = 0
-
-        for i in range(len(needClear)):
-            if needClear[i]:
+        isCleared = [False] * len(isConnected)
+        for r in range(len(isConnected)):
+            if not isCleared[r]:
+                self.clearRow(isConnected, isCleared, r)
                 provinces += 1
-                self.clearRow(isConnected, i, needClear)
         
         return provinces
     
 
-    def clearRow(self, grid: List[List[int]], row: int, needClear: List[bool]):
-        needClear[row] = False
-        for col in range(len(grid[0])):
-            if grid[row][col] == 1:
-                grid[row][col] = 0
-                
-                if row != col and needClear[col]:
-                    grid[col][row] = 0
-                    self.clearRow(grid, col, needClear)
+    def clearRow(self, isConnected: List[List[int]], isCleared: List[bool], row: int):
+        for col in range(len(isConnected[0])):
+            if isConnected[row][col] == 1:
+                isConnected[row][col] = 0
+
+                if row != col:
+                    isConnected[col][row] = 0
+                    self.clearRow(isConnected, isCleared, col)
         
+        isCleared[row] = True
