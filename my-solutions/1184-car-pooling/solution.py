@@ -1,37 +1,21 @@
 class Solution:
     def carPooling(self, trips: List[List[int]], capacity: int) -> bool:
-        remainingTrips = []
+        tripQueue = []
         for trip in trips:
-            tripPassengers, startLoc, endLoc = trip
-            heapq.heappush(remainingTrips, (startLoc, endLoc, tripPassengers))
+            numPassengers, start, end = trip
+            heapq.heappush(tripQueue, (start, end, numPassengers))
         
-        numPassengers = 0
-        currLoc = 0
-        currTrips = []
-
-        while remainingTrips:
-            if not currTrips:
-                nextStart, nextEnd, nextPassengers = heapq.heappop(remainingTrips)
-                currLoc = nextStart
-                numPassengers += nextPassengers
-                if numPassengers > capacity:
-                    return False
-                heapq.heappush(currTrips, (nextEnd, nextPassengers))
+        dropoff = []
+        passengers = 0
+        while len(tripQueue) > 0:
+            start, end, numPassengers = heapq.heappop(tripQueue)
+            while len(dropoff) > 0 and start >= dropoff[0][0]:
+                _, dropPassengers = heapq.heappop(dropoff)
+                passengers -= dropPassengers
             
-            if not remainingTrips:
-                return True
-
-            currLoc = min(currTrips[0][0], remainingTrips[0][0])
-            while currTrips and currLoc == currTrips[0][0]:
-                _, oldPassengers = heapq.heappop(currTrips)
-                numPassengers -= oldPassengers
-            
-            while remainingTrips and currLoc == remainingTrips[0][0]:
-                _, nextEnd, nextPassengers = heapq.heappop(remainingTrips)
-                numPassengers += nextPassengers
-                if numPassengers > capacity:
-                    return False
-                heapq.heappush(currTrips, (nextEnd, nextPassengers))
+            if passengers + numPassengers > capacity:
+                return False
+            heapq.heappush(dropoff, (end, numPassengers))
+            passengers += numPassengers
         
         return True
-        
