@@ -12,19 +12,23 @@ class Solution:
         if node is None:
             return None
         
-        visited = {}
-        cloned = self.cloneHelper(node, visited)
-        return cloned
-    
-
-    def cloneHelper(self, node: Optional['Node'], visited: dict):
-        clonedNode = Node(node.val)
-        visited[node.val] = clonedNode
-
-        for neighbor in node.neighbors:
-            newNeighbor = visited.get(neighbor.val)
-            if newNeighbor is None:
-                newNeighbor = self.cloneHelper(neighbor, visited)
-            clonedNode.neighbors.append(newNeighbor)
+        head = Node(node.val)
+        visited = {node.val: head}
+        queue = deque(node.neighbors)
         
-        return clonedNode
+        while len(queue) > 0:
+            currNode = queue.popleft()
+            if currNode.val in visited:
+                continue
+            
+            newNode = Node(currNode.val)
+            visited[currNode.val] = newNode
+
+            for neighbor in currNode.neighbors:
+                if neighbor.val in visited:
+                    newNode.neighbors.append(visited[neighbor.val])
+                    visited[neighbor.val].neighbors.append(newNode)
+                else:
+                    queue.append(neighbor)
+        
+        return head
