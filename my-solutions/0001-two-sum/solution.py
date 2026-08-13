@@ -1,12 +1,10 @@
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
-        mp = {}
+        complement = {}
         for i in range(len(nums)):
-            mp[nums[i]] = i
+            num = nums[i]
+            if target - num in complement:
+                return [complement[target - num], i]
+            complement[num] = i
         
-        for i in range(len(nums)):
-            complement = target - nums[i]
-            if complement in mp.keys() and mp[complement] != i:
-                return [i, mp[complement]]
-        
-        return -1
+        return [-1, -1]
