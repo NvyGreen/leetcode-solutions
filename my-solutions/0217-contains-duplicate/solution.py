@@ -5,4 +5,4 @@ class Solution:
             if num in st:
                 return True
             st.add(num)
-        return False        
+        return False
