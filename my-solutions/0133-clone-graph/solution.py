@@ -12,18 +12,19 @@ class Solution:
         if node is None:
             return None
         
-        head = Node(node.val)
-        visited = {node.val: head}
-        queue = deque(node.neighbors)
-        
+        queue = deque([node])
+        visited = {}
+        head = None
         while len(queue) > 0:
             currNode = queue.popleft()
             if currNode.val in visited:
                 continue
             
             newNode = Node(currNode.val)
-            visited[currNode.val] = newNode
-
+            if newNode.val == 1:
+                head = newNode
+            
+            visited[newNode.val] = newNode
             for neighbor in currNode.neighbors:
                 if neighbor.val in visited:
                     newNode.neighbors.append(visited[neighbor.val])
