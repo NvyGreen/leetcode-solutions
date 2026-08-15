@@ -1,24 +1,21 @@
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
-        if len(nums) == 1:
-            return [[nums[0]]]
-        
-        permutations = []
-        for num in nums:
-            permutations += self.permuteHelper(nums, [num])
-        
-        return permutations
+        result = []
+        visited = [False] * len(nums)
+        for i in range(len(nums)):
+            visited[i] = True
+            result += self.permuteHelper(nums, visited, [nums[i]])
+            visited[i] = False
+        return result
     
 
-    def permuteHelper(self, nums: List[int], currList: List[int]):
+    def permuteHelper(self, nums: List[int], visited: List[bool], running: List[int]) -> List[List[int]]:
+        if len(running) == len(nums):
+            return [running]
         result = []
-        for num in nums:
-            if num not in currList:
-                newList = currList.copy()
-                newList.append(num)
-                if len(newList) == len(nums):
-                    result.append(newList)
-                    return result
-                result += self.permuteHelper(nums, newList)
-        
+        for i in range(len(nums)):
+            if not visited[i]:
+                visited[i] = True
+                result += self.permuteHelper(nums, visited, running + [nums[i]])
+                visited[i] = False
         return result
