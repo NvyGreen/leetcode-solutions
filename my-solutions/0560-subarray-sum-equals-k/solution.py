@@ -1,14 +1,12 @@
 class Solution:
     def subarraySum(self, nums: List[int], k: int) -> int:
-        freq = {0: 1}
-        runningSum = 0
-        result = 0
+        complement = defaultdict(int)
+        complement[0] = 1
 
+        total, running = 0, 0
         for num in nums:
-            runningSum += num
-            complement = runningSum - k
-            if complement in freq:
-                result += freq[complement]
-            freq[runningSum] = freq.get(runningSum, 0) + 1
-
-        return result
+            running += num
+            if running - k in complement:
+                total += complement[running - k]
+            complement[running] += 1
+        return total
