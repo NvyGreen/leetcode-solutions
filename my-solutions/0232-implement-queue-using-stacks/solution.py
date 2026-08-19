@@ -12,21 +12,19 @@ class MyQueue:
         
 
     def pop(self) -> int:
-        if len(self.outStk) == 0:
-            while len(self.inStk) > 0:
-                self.outStk.append(self.inStk.pop())
+        while len(self.inStk) > 0:
+            self.outStk.append(self.inStk.pop())
         return self.outStk.pop()
         
 
     def peek(self) -> int:
-        if len(self.outStk) == 0:
-            while len(self.inStk) > 0:
-                self.outStk.append(self.inStk.pop())
+        while len(self.inStk) > 0:
+            self.outStk.append(self.inStk.pop())
         return self.outStk[-1]
         
 
     def empty(self) -> bool:
-        return len(self.inStk) + len(self.outStk) == 0
+        return len(self.inStk) == 0 and len(self.outStk) == 0
         
 
 
