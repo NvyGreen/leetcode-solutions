@@ -1,51 +1,33 @@
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
-        direction = "right"
-        result = []
-        row, col = 0, 0
+        spiral, visited = [], []
         m, n = len(matrix), len(matrix[0])
-
-        while True:
-            result.append(matrix[row][col])
-            matrix[row][col] = 101
-
-            if direction == "right":
-                if col + 1 >= n or matrix[row][col + 1] == 101:
-                    if row + 1 >= m or matrix[row + 1][col] == 101:
-                        break
-                    else:
-                        direction = "down"
-                        row += 1
-                else:
-                    col += 1
-            elif direction == "down":
-                if row + 1 >= m or matrix[row + 1][col] == 101:
-                    if col - 1 < 0 or matrix[row][col - 1] == 101:
-                        break
-                    else:
-                        direction = "left"
-                        col -= 1
-                else:
-                    row += 1
-            elif direction == "left":
-                if col - 1 < 0 or matrix[row][col - 1] == 101:
-                    if row - 1 < 0 or matrix[row - 1][col] == 101:
-                        break
-                    else:
-                        direction = "up"
-                        row -= 1
-                else:
-                    col -= 1
-            elif direction == "up":
-                if row - 1 < 0 or matrix[row - 1][col] == 101:
-                    if col + 1 >= n or matrix[row][col + 1] == 101:
-                        break
-                    else:
-                        direction = "right"
-                        col += 1
-                else:
-                    row -= 1
-            else:
-                break
+        for i in range(m):
+            row = []
+            for j in range(n):
+                row.append(False)
+            visited.append(row)
         
-        return result
+        row, col = 0, 0
+        rowDir, colDir = 0, 1
+        while len(spiral) < m * n:
+            spiral.append(matrix[row][col])
+            visited[row][col] = True
+
+            if colDir == 1 and (col + colDir >= n or visited[row][col + colDir]):
+                colDir = 0
+                rowDir = 1
+            elif rowDir == 1 and (row + rowDir >= m or visited[row + rowDir][col]):
+                colDir = -1
+                rowDir = 0
+            elif colDir == -1 and (col + colDir < 0 or visited[row][col + colDir]):
+                colDir = 0
+                rowDir = -1
+            elif rowDir == -1 and (row + rowDir < 0 or visited[row + rowDir][col]):
+                colDir = 1
+                rowDir = 0
+            
+            row += rowDir
+            col += colDir
+        
+        return spiral
