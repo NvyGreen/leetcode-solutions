@@ -1,35 +1,32 @@
 class Solution:
     def minPathSum(self, grid: List[List[int]]) -> int:
-        m = len(grid)
-        n = len(grid[0])
-        matrix = []
+        m, n = len(grid), len(grid[0])
+        dp = []
         for i in range(m):
-            matrix.append([-1] * n)
+            row = [-1] * n
+            dp.append(row)
         
-        self.search(grid, matrix, m, n, 0, 0)
-        return matrix[0][0]
+        self.pathHelper(grid, dp, m, n, 0, 0)
+        return dp[0][0]
     
 
-    def search(self, grid: List[List[int]], matrix: List[List[int]], m: int, n: int, row: int, col: int) -> None:
-        if row == m - 1 and col == n -1:
-            matrix[row][col] = grid[row][col]
+    def pathHelper(self, grid: List[List[int]], dp: List[List[int]], m: int, n: int, row: int, col: int) -> None:
+        if dp[row][col] != -1:
             return
         
-        rightSum = -1
+        if row == m - 1 and col == n - 1:
+            dp[row][col] = grid[row][col]
+            return
+        
+        rightSum = float('inf')
         if col + 1 < n:
-            if matrix[row][col + 1] == -1:
-                self.search(grid, matrix, m, n, row, col + 1)
-            rightSum = matrix[row][col + 1]
+            self.pathHelper(grid, dp, m, n, row, col + 1)
+            rightSum = dp[row][col + 1]
         
-        downSum = -1
+        downSum = float('inf')
         if row + 1 < m:
-            if matrix[row + 1][col] == -1:
-                self.search(grid, matrix, m, n, row + 1, col)
-            downSum = matrix[row + 1][col]
+            self.pathHelper(grid, dp, m, n, row + 1, col)
+            downSum = dp[row + 1][col]
         
-        if rightSum == -1:
-            matrix[row][col] = downSum + grid[row][col]
-        elif downSum == -1:
-            matrix[row][col] = rightSum + grid[row][col]
-        else:
-            matrix[row][col] = min(rightSum, downSum) + grid[row][col]
+        dp[row][col] = grid[row][col] + min(rightSum, downSum)
+        
