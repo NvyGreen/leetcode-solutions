@@ -1,28 +1,22 @@
 class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
-        queue = []
-        minDists = []
-        for i in range(n):
-            if i + 1 == k:
-                heapq.heappush(queue, (0, i + 1))
-                minDists.append(0)
-            else:
-                heapq.heappush(queue, (float('inf'), i + 1))
-                minDists.append(float('inf'))
+        graph = defaultdict(list)
+        for time in times:
+            graph[time[0]].append((time[1], time[2]))
+        dists = [float('inf')] * n
+        dists[k - 1] = 0
         
+        queue = [(0, k)]
         visited = set()
         while len(queue) > 0:
             dist, node = heapq.heappop(queue)
-            if dist != minDists[node - 1]:
+            if node in visited or dists[node - 1] != dist or dist == float('inf'):
                 continue
-            
-            for time in times:
-                if time[0] == node and time[1] not in visited and minDists[time[1] - 1] > minDists[node - 1] + time[2]:
-                    newTime = minDists[node - 1] + time[2]
-                    minDists[time[1] - 1] = newTime
-                    heapq.heappush(queue, (newTime, time[1]))
-            
             visited.add(node)
+
+            for neighbor, weight in graph[node]:
+                dists[neighbor - 1] = min(dists[neighbor - 1], dists[node - 1] + weight)
+                if dists[neighbor - 1] == dists[node - 1] + weight:
+                    heapq.heappush(queue, (dists[neighbor - 1], neighbor))
         
-        result = max(minDists)
-        return result if result != float('inf') else -1
+        return max(dists) if len(visited) == n else -1
