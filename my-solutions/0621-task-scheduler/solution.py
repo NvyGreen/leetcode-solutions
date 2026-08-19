@@ -1,37 +1,27 @@
 class Solution:
     def leastInterval(self, tasks: List[str], n: int) -> int:
-        task_freq = {}
+        task_freq = defaultdict(int)
         for task in tasks:
-            task_freq[task] = task_freq.get(task, 0) + 1
+            task_freq[task] += 1
         
-        ready_q = []
+        ready = []
         for task, freq in task_freq.items():
-            task_tup = (-freq, task)
-            heapq.heappush(ready_q, task_tup)
+            heapq.heappush(ready, (-freq, task))
         
+        cooldown = []
         time = 0
-        cooldown_q = []
-        while len(ready_q) > 0:
-            curr_freq, task = heapq.heappop(ready_q)            
-            curr_freq = -curr_freq
-            curr_freq -= 1
-
-            if curr_freq > 0:
-                task_tup = (time + n + 1, -curr_freq, task)
-                heapq.heappush(cooldown_q, task_tup)
+        while len(ready) > 0:
+            freq, task = heapq.heappop(ready)
+            freq += 1
+            if freq < 0:
+                heapq.heappush(cooldown, (time + n + 1, freq, task))
             
             time += 1
-            while len(cooldown_q) > 0 and cooldown_q[0][0] <= time:
-                _, curr_freq, task = heapq.heappop(cooldown_q)
-                task_tup = (curr_freq, task)
-                heapq.heappush(ready_q, task_tup)
+            if len(ready) == 0 and len(cooldown) > 0:
+                time = max(time, cooldown[0][0])
             
-            if len(ready_q) == 0 and len(cooldown_q) > 0:
-                time = cooldown_q[0][0]
-                while len(cooldown_q) > 0 and cooldown_q[0][0] <= time:
-                    _, curr_freq, task = heapq.heappop(cooldown_q)
-                    task_tup = (curr_freq, task)
-                    heapq.heappush(ready_q, task_tup)
+            while len(cooldown) > 0 and time >= cooldown[0][0]:
+                _, freq, task = heapq.heappop(cooldown)
+                heapq.heappush(ready, (freq, task))
         
         return time
-        
