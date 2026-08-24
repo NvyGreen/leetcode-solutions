@@ -3,7 +3,7 @@ class MinStack:
     def __init__(self):
         self.stk = []
         self.minStk = []
-
+        
 
     def push(self, value: int) -> None:
         self.stk.append(value)
@@ -12,8 +12,8 @@ class MinStack:
         
 
     def pop(self) -> None:
-        popped = self.stk.pop()
-        if popped == self.minStk[-1]:
+        val = self.stk.pop()
+        if val == self.minStk[-1]:
             self.minStk.pop()
         
 
