@@ -1,22 +1,24 @@
 class Solution:
     def evalRPN(self, tokens: List[str]) -> int:
-        values = []
-
+        stk = []
         for token in tokens:
             try:
-                values.append(int(token))
+                num = int(token)
+                stk.append(num)
             except ValueError:
-                val2 = values.pop()
-                val1 = values.pop()
+                num2 = stk.pop()
+                num1 = stk.pop()
+                result = 0
 
                 if token == "+":
-                    values.append(val1 + val2)
+                    result = num1 + num2
                 elif token == "-":
-                    values.append(val1 - val2)
+                    result = num1 - num2
                 elif token == "*":
-                    values.append(val1 * val2)
+                    result = num1 * num2
                 else:
-                    values.append(int(val1 / val2))
+                    result = int(num1 / num2)
+                
+                stk.append(result)
         
-        return values[0]
-        
+        return stk[0]
