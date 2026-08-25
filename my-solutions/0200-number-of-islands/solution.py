@@ -7,11 +7,11 @@ class Solution:
                     islands += 1
                     self.islandsHelper(grid, i, j)
         return islands
-
+    
 
     def islandsHelper(self, grid: List[List[str]], row: int, col: int) -> None:
         grid[row][col] = "0"
-
+        
         if col + 1 < len(grid[0]) and grid[row][col + 1] == "1":
             self.islandsHelper(grid, row, col + 1)
         
