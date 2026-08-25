@@ -7,19 +7,22 @@ class MyQueue:
 
     def push(self, x: int) -> None:
         while len(self.outStk) > 0:
-            self.inStk.append(self.outStk.pop())
+            num = self.outStk.pop()
+            self.inStk.append(num)
         self.inStk.append(x)
         
 
     def pop(self) -> int:
         while len(self.inStk) > 0:
-            self.outStk.append(self.inStk.pop())
+            num = self.inStk.pop()
+            self.outStk.append(num)
         return self.outStk.pop()
         
 
     def peek(self) -> int:
         while len(self.inStk) > 0:
-            self.outStk.append(self.inStk.pop())
+            num = self.inStk.pop()
+            self.outStk.append(num)
         return self.outStk[-1]
         
 
