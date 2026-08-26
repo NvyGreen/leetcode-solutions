@@ -6,10 +6,11 @@ class Solution:
 
         for i in range(1, len(intervals)):
             currStart, currEnd = intervals[i]
-            if currStart >= lastStart and currStart <= lastEnd:
-                result[-1][1] = max(currEnd, lastEnd)
+            if currStart <= lastEnd:
+                result[-1][0] = min(lastStart, currStart)
+                result[-1][1] = max(lastEnd, currEnd)
             else:
-                result.append(intervals[i])
+                result.append([currStart, currEnd])
             lastStart, lastEnd = result[-1]
         
         return result
