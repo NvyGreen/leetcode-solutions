@@ -2,24 +2,22 @@ class Solution:
     def convert(self, s: str, numRows: int) -> str:
         if numRows == 1:
             return s
-        
-        matrix = []
-        for _ in range(numRows):
-            matrix.append([])
-        
-        row = 0
-        down = True
-        for c in s:
-            matrix[row].append(c)
-            if row == 0:
-                down = True
-            elif row == numRows - 1:
-                down = False
+        zig = []
+        dist = [2 * (numRows - 1), 0]
+        start = 0
+
+        while start < numRows:
+            pos = start
+            move = 0
+
+            while pos < len(s):
+                if dist[move] != 0:
+                    zig.append(s[pos])
+                pos += dist[move]
+                move = (move + 1) % 2
             
-            row = row + 1 if down else row - 1
+            start += 1
+            dist[0] -= 2
+            dist[1] += 2
         
-        temp = []
-        for r in matrix:
-            temp.append(''.join(r))
-        
-        return ''.join(temp)
+        return ''.join(zig)
