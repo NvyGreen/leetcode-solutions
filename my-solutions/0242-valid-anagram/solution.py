@@ -9,5 +9,5 @@ class Solution:
             if freq[ord(c) - ord('a')] < 0:
                 return False
         
-        unique = set(freq)
-        return len(unique) == 1 and 0 in unique
+        check = set(freq)
+        return len(check) == 1 and 0 in check
