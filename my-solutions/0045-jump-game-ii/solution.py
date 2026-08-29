@@ -1,24 +1,22 @@
 class Solution:
     def jump(self, nums: List[int]) -> int:
-        if len(nums) == 1:
-            return 0
+        dp = [0] * len(nums)
+        for i in range(len(dp)):
+            dp[i] = i + nums[i]
         
-        n = len(nums)
-        dp = [-1] * n
-        for i in range(n):
-            dp[i] = nums[i] + i
-        jumps, pos = 0, 0
+        dest = len(nums) - 1
+        i, jumps = 0, 0
 
-        while pos < n - 1:
-            if dp[pos] >= n - 1:
+        while i < dest:
+            if dp[i] >= dest:
                 return jumps + 1
             
-            maxJump, maxPos = 0, pos
-            for i in range(pos + 1, min(dp[pos] + 1, n)):
-                if dp[i] >= maxJump:
-                    maxJump, maxPos = dp[i], i
+            maxJump, maxIndex = 0, i
+            for j in range(i + 1, min(dp[i] + 1, len(dp))):
+                if dp[j] >= maxJump:
+                    maxJump, maxIndex = dp[j], j
             
+            i = maxIndex
             jumps += 1
-            pos = maxPos
         
         return jumps
