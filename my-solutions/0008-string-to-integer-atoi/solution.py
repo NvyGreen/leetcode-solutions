@@ -1,9 +1,8 @@
 class Solution:
     def myAtoi(self, s: str) -> int:
         num = 0
+        flip, started = False, False
         digits = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
-        started = False
-        flip = False
 
         for c in s:
             if c == ' ' and not started:
@@ -11,8 +10,7 @@ class Solution:
             elif c == '+' and not started:
                 started = True
             elif c == '-' and not started:
-                flip = True
-                started = True
+                flip, started = True, True
             elif c in digits:
                 num = num * 10 + int(c)
                 started = True
@@ -20,6 +18,6 @@ class Solution:
                 break
         
         if flip:
-            return max(-2 ** 31, -num)
+            return max(-num, -2 ** 31)
         else:
-            return min(2 ** 31 - 1, num)
+            return min(num, 2 ** 31 - 1)
