@@ -2,11 +2,11 @@ class Solution:
     def leastInterval(self, tasks: List[str], n: int) -> int:
         task_freq = defaultdict(int)
         for task in tasks:
-            task_freq[task] += 1
+            task_freq[task] -= 1
         
         ready = []
         for task, freq in task_freq.items():
-            heapq.heappush(ready, (-freq, task))
+            heapq.heappush(ready, (freq, task))
         
         cooldown = []
         time = 0
@@ -17,10 +17,10 @@ class Solution:
                 heapq.heappush(cooldown, (time + n + 1, freq, task))
             
             time += 1
-            if len(ready) == 0 and len(cooldown) > 0:
-                time = max(time, cooldown[0][0])
+            if len(ready) == 0 and len(cooldown) > 0 and cooldown[0][0] > time:
+                time = cooldown[0][0]
             
-            while len(cooldown) > 0 and time >= cooldown[0][0]:
+            while len(cooldown) > 0 and cooldown[0][0] <= time:
                 _, freq, task = heapq.heappop(cooldown)
                 heapq.heappush(ready, (freq, task))
         
