@@ -3,7 +3,7 @@ class Solution:
         oldGroup, newGroup, count = 0, 0, 0
 
         for i in range(len(s)):
-            if i > 0 and s[i - 1] != s[i]:
+            if i > 0 and s[i] != s[i - 1]:
                 count += min(oldGroup, newGroup)
                 oldGroup, newGroup = newGroup, 0
             newGroup += 1
