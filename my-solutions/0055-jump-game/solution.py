@@ -1,30 +1,22 @@
 class Solution:
     def canJump(self, nums: List[int]) -> bool:
-        farthestReach = [-1] * len(nums)
-        index = 0
-        farthestReach[0] = nums[0]
-        destination = len(nums) - 1
-
-        while index < destination:
-            if farthestReach[index] == destination:
-                return True
+        dp = [0] * len(nums)
+        for i in range(len(nums)):
+            dp[i] = nums[i] + i
+        
+        pos, dest = 0, len(nums) - 1
+        while pos < dest:
+            maxJump, maxIndex = 0, pos
+            for j in range(pos + 1, min(dp[pos] + 1, len(nums))):
+                if dp[j] == dest:
+                    return True
+                
+                if dp[j] >= maxJump:
+                    maxJump, maxIndex = dp[j], j
             
-            if farthestReach[index] == index:
+            if maxIndex == pos:
                 return False
             
-            maxJump = 0
-            maxIndex = 0
-            for i in range(index + 1, farthestReach[index] + 1):
-                if i > destination:
-                    break
-                if farthestReach[i] == -1:
-                    farthestReach[i] = i + nums[i]
-                if farthestReach[i] >= maxJump:
-                    maxJump = farthestReach[i]
-                    maxIndex = i
-            
-            if maxJump == 0:
-                return False
-            index = maxIndex
+            pos = maxIndex
         
         return True
