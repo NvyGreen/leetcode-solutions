@@ -1,60 +1,61 @@
 class LRUCache:
 
     def __init__(self, capacity: int):
-        self.capacity = capacity
-        self.cache = {}
         self.head = Node()
         self.tail = Node()
         self.head.next = self.tail
         self.tail.prev = self.head
+
+        self.cache = {}
+        self.capacity = capacity
         
 
     def get(self, key: int) -> int:
-        if not self.cache.get(key):
+        if key not in self.cache:
             return -1
         
         node = self.cache[key]
         self._remove(node)
         self._add_front(node)
-        return node.value
+        return node.val
         
 
     def put(self, key: int, value: int) -> None:
-        if not self.cache.get(key):
-            node = Node(key, value)
-            self._add_front(node)
-            self.cache[key] = node
-
-            if len(self.cache) > self.capacity:
-                lruNode = self.tail.prev
-                del self.cache[lruNode.key]
-                self._remove(lruNode)
-        else:
+        if key in self.cache:
             node = self.cache[key]
             self._remove(node)
-            node.value = value
             self._add_front(node)
+            node.val = value
+            return
+        
+        if len(self.cache) == self.capacity:
+            node = self.tail.prev
+            self._remove(node)
+            del self.cache[node.key]
+        
+        node = Node(key, value)
+        self._add_front(node)
+        self.cache[key] = node
     
 
-    def _remove(self, node):
+    def _remove(self, node) -> None:
         node.prev.next = node.next
         node.next.prev = node.prev
     
-
-    def _add_front(self, node):
-        self.head.next.prev = node
+    def _add_front(self, node) -> None:
         node.next = self.head.next
-        self.head.next = node
         node.prev = self.head
+        self.head.next.prev = node
+        self.head.next = node
         
 
 
 class Node:
-    def __init__(self, key=-1, value=-1):
+    def __init__(self, key: int = -1, val: int = -1, prev = None, nxt = None):
         self.key = key
-        self.value = value
-        self.prev = None
-        self.next = None
+        self.val = val
+        self.prev = prev
+        self.next = nxt
 
 
 # Your LRUCache object will be instantiated and called as such:
