@@ -8,6 +8,7 @@ class Solution:
             for coin in coins:
                 if i - coin >= 0 and dp[i - coin] != -1:
                     minCoins = min(minCoins, dp[i - coin])
+            
             if minCoins != float('inf'):
                 dp[i] = minCoins + 1
         
