@@ -6,7 +6,5 @@ class Solution:
                 nums[search], nums[swap + 1] = nums[swap + 1], nums[search]
                 count += 1
                 swap += 1
-            
             search += 1
-        
         return count
