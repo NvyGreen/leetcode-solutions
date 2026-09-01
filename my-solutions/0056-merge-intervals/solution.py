@@ -7,9 +7,7 @@ class Solution:
         for i in range(1, len(intervals)):
             currStart, currEnd = intervals[i]
             if currStart <= lastEnd:
-                lastStart = min(lastStart, currStart)
-                lastEnd = max(lastEnd, currEnd)
-                result[-1] = [lastStart, lastEnd]
+                result[-1] = [min(currStart, lastStart), max(currEnd, lastEnd)]
             else:
                 result.append([currStart, currEnd])
             lastStart, lastEnd = result[-1]
