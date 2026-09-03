@@ -7,27 +7,23 @@ class Solution:
             visited.append(row)
         
         spiral = []
-        rowDelta, colDelta = 0, 1
-        row, col = 0, 0
-        while len(spiral) < m * n:
-            spiral.append(matrix[row][col])
-            visited[row][col] = True
+        dr, dc = 0, 1
+        r, c = 0, 0
 
-            if row + rowDelta < 0 or row + rowDelta >= m or col + colDelta < 0 or col + colDelta >= n or visited[row + rowDelta][col + colDelta]:
-                if rowDelta == 0 and colDelta == 1:
-                    rowDelta = 1
-                    colDelta = 0
-                elif rowDelta == 1 and colDelta == 0:
-                    rowDelta = 0
-                    colDelta = -1
-                elif rowDelta == 0 and colDelta == -1:
-                    rowDelta = -1
-                    colDelta = 0
-                elif rowDelta == -1 and colDelta == 0:
-                    rowDelta = 0
-                    colDelta = 1
+        while len(spiral) < m * n:
+            spiral.append(matrix[r][c])
+            visited[r][c] = True
+
+            if dr == 0 and dc == 1 and (c + dc >= n or visited[r][c + dc]):
+                dr, dc = 1, 0
+            elif dr == 1 and dc == 0 and (r + dr >= m or visited[r + dr][c]):
+                dr, dc = 0, -1
+            elif dr == 0 and dc == -1 and (c + dc < 0 or visited[r][c + dc]):
+                dr, dc = -1, 0
+            elif dr == -1 and dc == 0 and (r + dr < 0 or visited[r + dr][c]):
+                dr, dc = 0, 1
             
-            row += rowDelta
-            col += colDelta
+            r += dr
+            c += dc
         
         return spiral
