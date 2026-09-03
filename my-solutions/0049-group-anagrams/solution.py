@@ -6,5 +6,4 @@ class Solution:
             for c in word:
                 key[ord(c) - ord('a')] += 1
             groups[tuple(key)].append(word)
-        
         return list(groups.values())
