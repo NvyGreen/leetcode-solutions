@@ -1,18 +1,13 @@
-class Solution(object):
-    def plusOne(self, digits):
-        """
-        :type digits: List[int]
-        :rtype: List[int]
-        """
-        for i in range(len(digits) - 1, -1, -1):
-            if digits[i] + 1 > 9:
-                digits[i] = 0
-                if i == 0:
-                    digits.insert(0, 1)
+class Solution:
+    def plusOne(self, digits: List[int]) -> List[int]:
+        result = [0] + digits
+        carry = 1
+        
+        for i in range(len(result) - 1, -1, -1):
+            if result[i] == 9 and carry == 1:
+                result[i] = 0
             else:
-                digits[i] += 1
-                return digits
+                result[i] += carry
+                carry = 0
         
-        return digits
-            
-        
+        return result if result[0] == 1 else result[1:]
