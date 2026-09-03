@@ -10,5 +10,4 @@ class Solution:
                 stk.pop()
             else:
                 return False
-        
         return len(stk) == 0
