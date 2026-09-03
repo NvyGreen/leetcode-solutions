@@ -1,8 +1,7 @@
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-        start, end = 0, 0
         freq = defaultdict(int)
-        maxWindow = 0
+        start, end, maxWindow = 0, 0, 0
 
         while end < len(s):
             freq[s[end]] += 1
