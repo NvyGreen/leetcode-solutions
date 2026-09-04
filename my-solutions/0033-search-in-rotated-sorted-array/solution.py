@@ -4,6 +4,7 @@ class Solution:
 
         while start <= end:
             mid = (start + end) // 2
+
             if nums[mid] == target:
                 return mid
             elif nums[start] <= nums[mid]:
