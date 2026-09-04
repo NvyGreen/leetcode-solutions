@@ -6,38 +6,34 @@ class Solution:
         for i in range(len(nums)):
             if nums[i] > 0:
                 break
-            
-            if i == 0 or nums[i - 1] != nums[i]:
-                result += self.twoSumHelper(nums, i)
+            elif i == 0 or nums[i - 1] != nums[i]:
+                result += self.helper(nums, i)
         
         return result
     
 
-    def twoSumHelper(self, nums: list[int], pivot: int) -> list[list[int]]:
+    def helper(self, nums: list[int], pivot: int) -> list[list[int]]:
         start, end = pivot + 1, len(nums) - 1
-        result = []
-        
+        triplets = []
+
         while start < end:
-            total = nums[pivot] + nums[start] + nums[end]
-            if total == 0:
-                result.append([nums[pivot], nums[start], nums[end]])
+            check = nums[pivot] + nums[start] + nums[end]
+            if check == 0:
+                triplets.append([nums[pivot], nums[start], nums[end]])
                 start += 1
                 end -= 1
 
                 while start < end and nums[start - 1] == nums[start]:
                     start += 1
-                
                 while start < end and nums[end + 1] == nums[end]:
                     end -= 1
-            
-            elif total < 0:
+            elif check < 0:
                 start += 1
                 while start < end and nums[start - 1] == nums[start]:
                     start += 1
-            
             else:
                 end -= 1
                 while start < end and nums[end + 1] == nums[end]:
                     end -= 1
         
-        return result
+        return triplets
