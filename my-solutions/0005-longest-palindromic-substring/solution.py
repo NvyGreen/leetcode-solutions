@@ -1,12 +1,10 @@
 class Solution:
     def longestPalindrome(self, s: str) -> str:
         dp = []
-        for _ in range(len(s)):
-            row = [False] * len(s)
-            dp.append(row)
-        
         for i in range(len(s)):
-            dp[i][i] = True
+            row = [False] * len(s)
+            row[i] = True
+            dp.append(row)
         
         bestLen, bestIndex, checkLen = 1, 0, 2
         while checkLen <= len(s):
