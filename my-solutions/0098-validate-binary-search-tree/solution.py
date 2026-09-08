@@ -9,11 +9,10 @@ class Solution:
         return self.helper(root, float('-inf'), float('inf'))
     
 
-    def helper(self, root: Optional[TreeNode], minVal: int | float, maxVal: int | float) -> bool:
-        if root is None:
+    def helper(self, node: Optional[TreeNode], minVal: float | int, maxVal: float | int) -> bool:
+        if node is None:
             return True
-        
-        if root.val <= minVal or root.val >= maxVal:
+        elif node.val <= minVal or node.val >= maxVal:
             return False
         
-        return self.helper(root.left, minVal, root.val) and self.helper(root.right, root.val, maxVal)
+        return self.helper(node.left, minVal, node.val) and self.helper(node.right, node.val, maxVal)
