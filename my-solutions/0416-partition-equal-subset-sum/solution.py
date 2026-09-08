@@ -10,7 +10,7 @@ class Solution:
 
         for num in nums:
             for i in range(len(dp) - 1, -1, -1):
-                if i + num < len(dp) and dp[i]:
+                if dp[i] and i + num < len(dp):
                     dp[i + num] = True
         
         return dp[-1]
