@@ -1,7 +1,6 @@
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        adjList = defaultdict(list)
-        indegree = [0] * numCourses
+        indegree, adjList = [0] * numCourses, defaultdict(list)
         for course, prereq in prerequisites:
             adjList[prereq].append(course)
             indegree[course] += 1
@@ -11,13 +10,13 @@ class Solution:
             if indegree[i] == 0:
                 queue.append(i)
         
-        coursesTaken = 0
+        taken = []
         while len(queue) > 0:
             prereq = queue.popleft()
             for course in adjList[prereq]:
                 indegree[course] -= 1
                 if indegree[course] == 0:
                     queue.append(course)
-            coursesTaken += 1
+            taken.append(prereq)
         
-        return coursesTaken == numCourses
+        return len(taken) == numCourses
