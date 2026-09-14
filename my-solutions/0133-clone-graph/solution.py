@@ -12,23 +12,24 @@ class Solution:
         if node is None:
             return None
         
-        queue = deque([node])
-        visited = {}
         head = None
+        created = {}
+        queue = deque([node])
+
         while len(queue) > 0:
-            currNode = queue.popleft()
-            if currNode.val in visited:
+            curr = queue.popleft()
+            if curr.val in created:
                 continue
             
-            newNode = Node(currNode.val)
-            if newNode.val == 1:
-                head = newNode
+            new = Node(curr.val)
+            if new.val == 1:
+                head = new
             
-            visited[newNode.val] = newNode
-            for neighbor in currNode.neighbors:
-                if neighbor.val in visited:
-                    newNode.neighbors.append(visited[neighbor.val])
-                    visited[neighbor.val].neighbors.append(newNode)
+            created[new.val] = new
+            for neighbor in curr.neighbors:
+                if neighbor.val in created:
+                    new.neighbors.append(created[neighbor.val])
+                    created[neighbor.val].neighbors.append(new)
                 else:
                     queue.append(neighbor)
         
