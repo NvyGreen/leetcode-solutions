@@ -1,11 +1,14 @@
 class Solution:
     def firstUniqChar(self, s: str) -> int:
-        freq, queue = defaultdict(int), []
+        freq, queue = defaultdict(int), deque([])
         for c in s:
-            queue.append(c)
             freq[c] += 1
+            queue.append(c)
         
-        for i in range(len(queue)):
-            if freq[queue[i]] == 1:
+        i = 0
+        while len(queue) > 0:
+            c = queue.popleft()
+            if freq[c] == 1:
                 return i
+            i += 1
         return -1
