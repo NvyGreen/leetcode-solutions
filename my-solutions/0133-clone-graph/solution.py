@@ -13,23 +13,23 @@ class Solution:
             return None
         
         head = None
-        created = {}
         queue = deque([node])
+        visited = {}
 
         while len(queue) > 0:
             curr = queue.popleft()
-            if curr.val in created:
+            if curr.val in visited:
                 continue
             
             new = Node(curr.val)
             if new.val == 1:
                 head = new
-            
-            created[new.val] = new
+            visited[new.val] = new
+
             for neighbor in curr.neighbors:
-                if neighbor.val in created:
-                    new.neighbors.append(created[neighbor.val])
-                    created[neighbor.val].neighbors.append(new)
+                if neighbor.val in visited:
+                    new.neighbors.append(visited[neighbor.val])
+                    visited[neighbor.val].neighbors.append(new)
                 else:
                     queue.append(neighbor)
         
