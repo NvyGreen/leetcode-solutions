@@ -4,25 +4,24 @@ class Solution:
         if endWord not in wordSet:
             return 0
         
-        bfs = deque([])
-        bfs.append((1, beginWord))
+        queue = deque([(1, beginWord)])
         wordSet.discard(beginWord)
-        
-        while len(bfs) > 0:
-            rank, word = bfs.popleft()
+
+        while len(queue) > 0:
+            rank, word = queue.popleft()
             if word == endWord:
                 return rank
             
             for i in range(len(word)):
                 start = word[:i]
                 end = word[i+1:]
-                removeWords = set()
+                rm = set()
 
-                for testWord in wordSet:
-                    if (start == '' or testWord.startswith(start)) and (end == '' or testWord.endswith(end)):
-                        bfs.append((rank + 1, testWord))
-                        removeWords.add(testWord)
+                for test in wordSet:
+                    if (start == '' or test.startswith(start)) and (end == '' or test.endswith(end)):
+                        queue.append((rank + 1, test))
+                        rm.add(test)
                 
-                wordSet -= removeWords
+                wordSet -= rm
         
         return 0
