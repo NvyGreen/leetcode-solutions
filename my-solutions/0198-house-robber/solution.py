@@ -1,19 +1,12 @@
 class Solution:
-    def rob(self, nums: List[int]) -> int:
-        loot = [-1] * len(nums)
-        maxLoot = 0
-        secMaxLoot = -1
-
-        for i in range(len(nums) - 1, -1, -1):
-            if maxLoot == 0 or loot[i + 1] != maxLoot:
-                loot[i] = nums[i] + maxLoot
-            else:
-                loot[i] = nums[i] + secMaxLoot
-            
-            if loot[i] >= maxLoot:
-                secMaxLoot = maxLoot
-                maxLoot = loot[i]
-            elif loot[i] >= secMaxLoot:
-                secMaxLoot = loot[i]
+    def rob(self, nums: list[int]) -> int:
+        if len(nums) == 1:
+            return nums[0]
         
-        return maxLoot
+        dp = [0] * (len(nums) + 1)
+        dp[-2] = nums[-1]
+
+        for i in range(len(dp) - 3, -1, -1):
+            dp[i] = max(nums[i] + dp[i + 2], dp[i + 1])
+        
+        return dp[0]
