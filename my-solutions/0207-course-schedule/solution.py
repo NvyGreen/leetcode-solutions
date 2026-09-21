@@ -1,22 +1,24 @@
 class Solution:
-    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        indegree, adjList = [0] * numCourses, defaultdict(list)
+    def canFinish(self, numCourses: int, prerequisites: list[list[int]]) -> bool:
+        edges = defaultdict(list)
+        indgr = [0] * numCourses
+
         for course, prereq in prerequisites:
-            adjList[prereq].append(course)
-            indegree[course] += 1
+            indgr[course] += 1
+            edges[prereq].append(course)
         
         queue = deque([])
         for i in range(numCourses):
-            if indegree[i] == 0:
+            if indgr[i] == 0:
                 queue.append(i)
-        
-        taken = []
+        schedule = set()
+
         while len(queue) > 0:
-            prereq = queue.popleft()
-            for course in adjList[prereq]:
-                indegree[course] -= 1
-                if indegree[course] == 0:
+            taken = queue.popleft()
+            for course in edges[taken]:
+                indgr[course] -= 1
+                if indgr[course] == 0:
                     queue.append(course)
-            taken.append(prereq)
+            schedule.add(taken)
         
-        return len(taken) == numCourses
+        return len(schedule) == numCourses
