@@ -6,7 +6,6 @@ class Solution:
             row[i] = True
             dp.append(row)
         
-
         bestIndex, bestLen, checkLen = 0, 1, 2
         while checkLen <= len(s):
             for i in range(len(s)):
@@ -21,4 +20,4 @@ class Solution:
             
             checkLen += 1
         
-        return s[bestIndex:bestIndex + bestLen]
+        return s[bestIndex:bestIndex+bestLen]
