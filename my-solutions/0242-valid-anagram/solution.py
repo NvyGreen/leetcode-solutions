@@ -1,13 +1,13 @@
 class Solution:
     def isAnagram(self, s: str, t: str) -> bool:
-        freq = defaultdict(int)
+        freqs = [0] * 26
         for c in s:
-            freq[c] += 1
+            freqs[ord(c) - ord('a')] += 1
         
         for c in t:
-            freq[c] -= 1
-            if freq[c] < 0:
+            freqs[ord(c) - ord('a')] -= 1
+            if freqs[ord(c) - ord('a')] < 0:
                 return False
         
-        check = set(freq.values())
+        check = set(freqs)
         return len(check) == 1 and 0 in check
